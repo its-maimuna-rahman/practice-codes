@@ -1,0 +1,111 @@
+---
+title: "Fertility Measures Exercise"
+subtitle: "232 Module 2 practice"
+author: "Maimuna"
+format: html
+editor: visual
+---
+
+## 1. Build the Rajshahi data frame, then compute CBR
+
+```{r}
+age_group <- c("15-19", "20-24", "25-29", "30-34", "35-39", "40-44", "45-49")
+births <- c(7500, 15000, 11000, 6300, 1900, 510, 75)
+female_pop <- c(125000, 115000, 110000, 105000, 95000, 85000, 75000)
+L5x <- c(494000, 491000, 488000, 484500, 480000, 474000, 466000)
+
+fert <- data.frame(age_group, births, female_pop, L5x)
+
+total_pop <- 2700000
+
+fert
+```
+
+#### Crude Birth Rate (CBR)
+
+```{r}
+total_birth <- sum(fert$births)            # 42,285
+
+CBR <- total_birth/ total_pop * 1000
+CBR
+```
+
+## 2. Annualised Monthly Birth Rate for March 2024
+
+```{r}
+march_birth <- 3580
+march_day <- 31
+march_pop <- 2700000
+
+CBR <- (365/march_day) * march_birth / march_pop * 1000
+round(CBR, 2)
+
+```
+
+CBR was 15.66, so March is right at the yearly average pace, only a touch below.
+
+## 3. GFR for Rajshahi
+
+```{r}
+total_female <- sum(fert$female_pop)
+
+GFR <- total_birth / total_female * 1000
+round(GFR, 2)
+```
+
+About 59.56 live births per 1,000 women aged 15 to 49 in Rajshahi 2024. Lower than Khulna's 69.13, pointing to a slightly lower fertility regime.
+
+## 4. Full ASFR vector for Rajshahi, plus a line plot
+
+```{r}
+fert$ASFR <- fert$births / fert$female_pop * 1000
+fert[, c("age_group", "ASFR")]
+```
+
+#### Line plot
+
+```{r}
+plot(fert$ASFR,
+     main = "ASFR of Rajshahi 2024",
+     xlab = "Age Group",
+     ylab = "ASFR (Per 1000 women)",
+     type = "o",
+     xaxt = "n",
+     col = "maroon")
+axis(1, at = 1:7, labels = fert$age_group)
+```
+
+## 5. TFR for Rajshahi
+
+```{r}
+n <- 5 # class width
+TFR <- n * sum(fert$ASFR) / 1000
+round(TFR, 4)
+```
+
+Each Rajshahi woman has on average about 1.89 children IN 2024.
+
+## 6. GRR at two different p values
+
+```{r}
+GRR_487 <- TFR * 0.487
+GRR_485 <- TFR * 0.485
+
+round(c(p_0.487 = GRR_487, p_0.485 = GRR_485), 3)
+```
+
+GRR scales linearly with p. A slightly smaller p (fewer daughters per 100 births) gives a slightly smaller GRR.
+
+## 7. NRR for Rajshahi, using L5x from the life table
+
+```{r}
+p_fe <- 0.487
+l0 <- 100000
+NRR <- sum(fert$ASFR * p_fe * fert$L5x / l0) / 1000
+
+round(NRR, 3)
+```
+
+GRR was 0.919. NRR is smaller because each age band is weighted by 5Lx / l0, the average woman years lived per radix, which is always less than the full band width n = 5.
+
+whenever any mortality exists. Mortality erodes the reproductive contribution slightly at each age.

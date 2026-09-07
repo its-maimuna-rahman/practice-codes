@@ -1,0 +1,132 @@
+---
+title: "Fertility Measures"
+subtitle: "232 Module 2 Practice"
+author: "Maimuna Rahman"
+format: html
+editor: visual
+---
+
+## Dataset
+
+```{r}
+# Khulna District, mid year 2024 (illustrative figures)
+age_group  <- c("15-19", "20-24", "25-29", "30-34",
+                 "35-39", "40-44", "45-49")
+
+births     <- c(8000, 15000, 11000, 7000,
+                 2200, 600,   100)
+
+female_pop <- c(110000, 105000, 100000, 95000,
+                 85000,  75000,  65000)
+
+L5x        <- c(494000, 491000, 488000, 484500,
+                 480000, 474000, 466000)  # from a life table, radix 100,000
+
+fert <- data.frame(age_group, births, female_pop, L5x)
+
+# Two more constants we will use later
+total_pop <- 2400000     # Khulna mid year total population
+p_female  <- 0.487        # proportion of births that are girls (Bangladesh average)
+fert
+```
+
+## Crude Birth Rate (CBR)
+
+```{r}
+total_birth <- sum(fert$births)
+CBR <- total_birth / total_pop * 1000
+round(CBR, 2)
+```
+
+Khulna had about 18.29 birth per 1000 people in 2024.
+
+## Monthly Birth Rate (MBR), annualised
+
+```{r}
+# Khulna, March 2024: 31 days, 3,720 live births recorded
+days <- 31 # march
+pop_month <- 2400000
+birth_month <- 3720
+
+MBR <- (365/days) * (birth_month / pop_month * 1000)
+MBR
+```
+
+Sanity check: CBR ≈ 18.29 and MBR ≈ 18.25. They are close because the monthly count we used (3,720) is close to the yearly average per month (43,900 / 12 ≈ 3,658). If the monthly count had been seasonally high or low, the annualised MBR would have drifted away from the annual CBR.
+
+## General Fertility Rate (GFR)
+
+```{r}
+pop_f_15_49 <- sum(fert$female_pop)
+GFR <- total_birth / pop_f_15_49 * 1000
+round(GFR, 2)
+```
+
+There were about 69.13 live births per 1,000 women aged 15 to 49 in Khulna in 2024. GFR is roughly 3.7 times CBR here, simply because the denominator shrank by about that factor.
+
+**The classic rule of thumb, GFR ≈ 4.5 × CBR**
+
+```{r}
+GFR2 <- 4.5 * CBR
+round(GFR2, 2)
+```
+
+The approximation predicts 82.3, the actual GFR is 69.1. The rule of thumb is on the right order of magnitude; the gap here mostly reflects Khulna's particular age and sex composition.
+
+## Age Specific Fertility Rate (ASFR)
+
+```{r}
+fert$ASFR <- fert$births / fert$female_pop * 1000
+
+fert[, c("age_group", "ASFR")]
+```
+
+### ASFR curve
+
+```{r}
+plot(fert$ASFR,
+     type = "o",
+     pch = 19,
+     col = "#2563eb",
+     xaxt = "n",
+     xlab = "Age group",
+     ylab = "ASFR (per 1000 women)",
+     main = "Khulna 2024, Age Specific Fertility")
+axis(1, at = 1:7, labels = fert$age_group)
+```
+
+The classic fertility curve. Rates rise from age 15, peak between 20 and 29, then fall sharply. In Bangladesh the peak typically sits at 20 to 24, the modal childbearing age. ASFR is the building block for every measure on the next four slides.
+
+## Total Fertility Rate (TFR)
+
+```{r}
+n <- 5           # age band width
+TFR <- n * sum(fert$ASFR) / 1000
+round(TFR, 2)
+```
+
+a TFR of 2.173 means a woman in Khulna, if she lived through her whole reproductive life experiencing 2024 age specific rates, would have about 2.17 live births on average.
+
+## Gross Reproduction Rate (GRR)
+
+```{r}
+# p is the proportion of live births that are girls
+
+GRR <- TFR * p_female
+round(GRR, 2)
+```
+
+a GRR of 1.058 means each Khulna woman would, on average, give birth to about 1.06 daughters over her reproductive lifetime, assuming no daughter ever dies before reaching the end of her own reproductive period.
+
+## Net Reproduction Rate (NRR)
+
+```{r}
+l0 <- 100000
+NRR <- sum((fert$ASFR) * p_female * (fert$L5x / l0)) / 1000
+
+round(NRR, 2)
+```
+on current age specific fertility and mortality, each woman in Khulna is replaced, in the next generation, by about 1.03 surviving daughters. Values above 1 indicate a population that is still slowly growing through natural increase. Below 1 indicates eventual decline.
+
+
+GRR assumed every newborn daughter survives the full reproductive period. NRR drops that assumption by weighting each age band by the chance a woman is still alive in it, taken from a life table.
