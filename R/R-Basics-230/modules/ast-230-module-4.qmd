@@ -1,0 +1,285 @@
+---
+title: "R Programming module 4"
+author: "Maimuna"
+format: pdf
+editor: visual
+---
+
+### 1. Matrics
+
+```{r}
+# creating matrix using matrix()
+
+A = matrix(
+  1:9,
+  nrow = 3,
+  ncol = 3,
+  byrow = T     # default: byrow = FALSE
+)
+A
+```
+
+
+```{r}
+# Creating matrix using rbind() or cbind()
+
+B <- rbind(1:3, 11:13, 111:113)
+C <- cbind(letters[1:2], c("k", "l"), letters[13:14])
+
+
+B
+cat("\n")
+C
+```
+
+```{r}
+# Creating matrix by adding dim attribute
+
+z <- 101:108
+dim(z) <- c(4, 2)
+z
+```
+
+
+### 2. Arrays
+```{r}
+# Creating array using array()
+
+D <- array(1:8, dim = c(2, 2, 2))
+D
+```
+
+
+```{r}
+# Creating array by adding dim attribute
+z <- 1:18
+dim(z) <- c(2, 3, 3)
+z
+```
+
+
+### 3. Calculations on matrices
+
+```{r}
+meow_mat <- matrix(1:16, nrow = 4, ncol = 4, byrow = T)
+rownames(meow_mat) <- c("A", "B", "C", "D")
+colnames(meow_mat) <- c("a", "b", "c", "d") 
+
+meow_mat
+```
+
+
+```{r}
+mat1 <- matrix(c(2, 0, 1, 1), nrow = 2)
+mat2 <- matrix(c(1, 1, 0, 2), nrow = 2)
+mat1
+mat2
+
+mat_add <- mat1 + mat2
+mat_add
+
+mat_element_mult <- mat1 * mat2
+mat_element_mult
+
+mat_mult <- mat1 %*% mat2
+mat_mult
+
+```
+
+
+### 4. Basic martrix functions
+
+```{r}
+# transpose
+meow_mat_t <- t(meow_mat)
+meow_mat_t
+
+# diagonal element
+diag(meow_mat)
+
+ncol(meow_mat)
+nrow(meow_mat)
+colSums(meow_mat)
+rowSums(meow_mat)
+```
+
+
+### Exercise 4
+
+1. Create a vector called x consisting of the first fifteen integers of the number line.
+
+2. Use the function dim() to assign dimension to vector x with three rows and five columns. What is the class of x now?
+
+```{r}
+# 1.
+
+x_ex4 <- 1:15
+x_ex4
+
+dim(x_ex4) <- c(3, 5)
+x_ex4
+```
+   
+
+3. Given the following matrices ...
+
+   i. Calculate A^(T)b
+   ii. Find the inverse of matrix A
+   iii. Solve the equation for x, where Ax = b
+   
+```{r}
+A_ex4 <- matrix(c(2, 0, 7, 7, 9, 4, 5, 8, 0, 1, 5, 7, 0, 4, 1, 4), nrow = 4)
+A_ex4
+
+b_ex4 <- matrix(c(-1, 6, 0, 9), nrow = 4)
+b_ex4
+
+# i
+AT_b <- t(A_ex4) %*% b_ex4
+AT_b
+
+# ii
+solve(A_ex4)
+
+# iii
+solve(A_ex4, b_ex4)
+
+```
+   
+
+4. i. Generate a vector x0 of order 20 with all elements as 1
+
+ii. Generate a vector x1 of order 20 with elements randomly selected from 30:70, consider a seed 80
+
+iii. Create a matrix X with the first column x0 and the second column x1
+
+iv. Generate a vector Y of order 20 using the equation yi = 1.2 + 1.8x1 + epsilon(i), where epsilon(i) ~ N(0,9) 
+
+v. Obtain the value of (X'X)^(-1)X'Y
+
+```{r}
+# i
+x0 <- rep(1, times = 20)
+x0
+
+# ii
+set.seed(80)
+x1 <- sample(30:70, 20, replace = T)
+x1
+
+# iii
+X <- matrix(c(x0, x1), ncol = 2)
+X
+
+# iv
+epsilon <- rnorm(20, mean = 0, sd = 9)
+Y <- 1.2 + (1.8 * x1) + epsilon
+Y
+
+# v
+value <- (solve(t(X) %*% X)) %*% (t(X)) %*% Y
+value
+```
+
+
+### 5. Factors
+
+Factors look like strings, but behave like integers
+
+```{r}
+# Creating factor using factor()
+
+fc = factor(x = c(1, 2, 2, 3, 4, 4, 3, 1, 4, 2, 2, 3, 1, 4, 1),
+             levels = c(1, 2, 3, 4),
+             labels = c("east", "west", "north", "south"))
+
+fc
+
+typeof(fc)
+as.character(fc)
+```
+
+```{r}
+# not providing levels
+fac1 = factor(c("Male", "Female", "Male",
+               "Male", "Female", "Male", "Female"))
+fac1
+
+typeof(fac1)
+attributes(fac1)
+```
+
+```{r}
+# providing levels 
+fac2 = factor(c("Male", "Female", "Male",
+               "Male", "Female", "Male", "Female"), 
+             levels = c("Male", "Female"))
+fac2
+```
+
+### 6. Lists
+
+List is a vector with heterogeneous elements, i.e., each element of a list can be any type
+
+```{r}
+ls1 <- list(1:3,
+            "m",
+            c(T, F, F, T, T),
+            c(2.5, 1.2, 0.8, 5.5))
+
+ls1
+
+typeof(ls1)
+is.list(ls1)
+str(ls1)
+```
+
+```{r}
+# Lists are sometimes called recursive vectors
+l3 <- list(list(list("First list")))
+l3
+str(l3)
+```
+
+
+### 7. Data Frame
+
+```{r}
+name <- c("cat", "dog", "duck", "cow")
+language <- c("meow", "brrr", "quack", "moo")
+age <- c(2, 5, 1, 3)
+
+df <- data.frame(name, language, age)
+df
+
+typeof(df)
+is.data.frame(df)
+attributes(df)
+str(df)
+names(df)
+summary(df)
+head(df)
+tail(df)
+```
+
+### 8. Tibble
+
+```{r}
+# Load the tibble package
+library(tibble)
+
+my_data <- tibble(
+  name = c("Samir", "Amir", "Aman"),
+  age = c(25, 30, 35),
+  city = c("Dhaka", "Khulna", "Jashore")
+)
+my_data
+```
+
+```{r}
+# mtcars data set as tibble
+
+mtcars_t <- as_tibble(mtcars)
+mtcars_t
+```
+

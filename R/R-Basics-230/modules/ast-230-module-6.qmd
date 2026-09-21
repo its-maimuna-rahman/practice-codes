@@ -1,0 +1,103 @@
+---
+title: "R Programming module 6"
+author: "Maimuna"
+format: pdf
+editor: visual
+---
+
+### 1. Function
+```{r}
+right_triangle_area <- function(base, height) {
+  area <- 0.5 * base * height
+  return(area)
+}
+
+right_triangle_area(2, 3)
+```
+
+### 2. Simulating rolling dice
+
+```{r}
+roll <- function() {
+  dice <- 1:6
+  out <- sample(x = dice, size = 1)
+  return(out)
+}
+
+roll()
+roll
+```
+
+### 3. Functions with arguments
+
+```{r}
+# toss a fair coin n times, number of heads = ?
+# SRSWR
+
+coin_head <- function(n) {
+  head <- sample(c(0, 1), size = n, replace = T)
+  total_head <- sum(head)
+  return(total_head)
+}
+
+coin_head(1000)
+
+```
+
+
+### Exercise 6.1
+
+1. Write an R function roll_dice() that rolls a dice n times (where n is 1 or more) and returns the sum of the dice rolls.
+
+```{r}
+roll_dice <- function(n) {
+  
+  if (n < 1) {
+    stop("n must be 1 or more times.")
+  }
+  
+  dice <- sample(1:6, size = n, replace = T)
+  sum(dice)
+}
+
+roll_dice(10)
+```
+
+
+2. Write an R function toss_bias_coins() that tosses a biased coin n times (where n is 1 or more times) and returns the number of heads. The probability of getting heads is 0.70.
+
+```{r}
+toss_bias_coins <- function(n) {
+  
+  if(n < 1) {
+    stop("n must be greater than or equal to 1")
+  }
+  
+  tosses <- rbinom(n = n, size = 1, prob = 0.7)
+  return(sum(tosses))
+}
+
+toss_bias_coins(10)
+```
+
+
+3. Write an R function that can simulate flipping a fair or biased coin. The probability of getting heads should not always be 0.70, but any value between 0 and 1!
+
+```{r}
+toss_bias_coins_2 <- function(n, probability) {
+  
+  if(n < 1) {
+    stop("n must be greater than or equal to 1")
+  }
+  
+  if(probability < 0 | probability > 1) {
+    stop("probability range : [0,1]")
+  }
+  
+  tosses <- rbinom(n = n, size = 1, prob = probability)
+  return(sum(tosses))
+}
+
+toss_bias_coins_2(10, 0.8)
+```
+
