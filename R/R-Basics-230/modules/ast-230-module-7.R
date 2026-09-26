@@ -1,0 +1,228 @@
+# ### 1. Control Flow - Choices (if, if else, case)
+
+x <- sample(1:10, size = 1)
+x
+
+if(x >= 5) {
+  "x is greater than or equal to 5"
+} else {
+  "x is smaller than 5"
+}
+
+# grading system
+
+grade <- function(x) {
+  if(x >= 90) y = "A"
+  else if(x >= 80 & x < 90) y = "B"
+  else if(x >= 60 & x < 80) y = "C"
+  else y = "D"
+  
+  return(y)
+}
+
+grade(90)
+
+
+library(dplyr)
+
+grade_case <- function(x) {
+  
+  y <- case_when(x >= 90 ~ "A",
+                 x >= 80 & x < 90 ~ "B",
+                 x >= 60 & x < 80 ~ "C",
+                 x < 60 ~ "D")
+  return(y)               
+}
+
+grade_case(67)
+
+
+x <- 1:10
+x
+
+dplyr::if_else(x %% 2 == 0, "even", "odd")
+
+# ### 2. Loops
+
+v <- c("this", "is", "a", "for", "loop")
+
+for(i in v) {
+  print(i)
+}
+
+for(i in 1:10) {
+  if(i < 3) next
+  if(i >= 8) break
+  print(i)
+}
+
+z <- 1
+while(z < 4) {
+  z = z+1
+  print(z)
+}
+
+# ### Exercise 7.1
+
+# 1. Write a function max_of_three(a, b, c) that returns the largest of three
+# numbers using only if and else. Do not use max(), sort(), or which.max().
+
+max_of_three <- function(a, b, c) {
+  
+  if(a > b && a > c) return(a)
+  else if(b > a && b > c) return(b)
+  else return(c)
+}
+
+max_of_three(1, 10, 5)
+
+
+# 2. Write a function piecewise(x) that returns ...
+#    Use an if/else if/else structure.
+
+piecewise <- function(x) {
+  
+  if(x < 0) {
+    return((x * x) + 1)
+  } else if(x >= 0 && x < 5) {
+    return(2*x)
+  } else {
+    return(x^(0.5))
+  }
+}
+
+piecewise(-10)
+piecewise(3)
+piecewise(7)
+
+
+# 3. Write a function valid_date(day, month) that returns TRUE when the supplied
+# day is valid for the supplied month and FALSE otherwise. Assume a non-leap year
+# and that month is an integer from 1 to 12.
+
+valid_date <- function(day, month) {
+  
+  if(month == 1 | month == 3 | month == 5 | month == 7 | month == 8 | 
+     month == 10 | month == 12) {
+    if(day >= 1 && day <= 31) {
+      return(T)
+    } else {
+      return(F)
+    }
+  } else if(month == 4 | month == 6 | month == 9 | month == 11) {
+    if(day >= 1 && day <= 30) {
+      return(T)
+    } else {
+      return(F)
+    }
+  } else if(month == 2) {
+    if(day >= 1 && day <= 28) {
+      return(T)
+    } else {
+      return(F)
+    }
+  } else {
+    return(F)
+  }
+}
+
+valid_date(31, -1)
+valid_date(1, 10)
+
+
+# 4. Write a function is_prime(n) that uses a for loop to return TRUE if n is
+# prime and FALSE otherwise. Return FALSE for n < 2.
+
+is_prime <- function(n) {
+  
+  if(n < 2) return(F)
+  if(n == 2) return(T)
+
+  for(i in 2:(n-1)) {
+    if(n %% i == 0) {
+      return(F)
+    }
+  }
+  
+  return(T)
+}
+
+is_prime(11)
+
+
+# 5. Using a for loop, create a vector containing the first 15 Fibonacci numbers.
+# Start with 0 and 1.
+
+fibonacci <- c(0, 1)
+
+for(i in 3:15) {
+  fibonacci[i] <- fibonacci[i-1] + fibonacci[i-2]
+}
+
+print(fibonacci)
+
+
+# 6. Write a function first_repeated_value(x) that uses a for loop to return the
+# first value that appears for a second time while scanning x from left to right.
+# Return NA if there is no repeated value. Do not use duplicated() or unique().
+
+first_repeated_value <- function(x) {
+  
+  if(length(x) < 2) return(NA)
+  
+  seen <- c()
+  
+  for(item in x) {
+    if(item %in% seen) return(item)
+    
+    seen <- c(seen, item)
+  }
+  
+  return(NA)
+}
+
+first_repeated_value(x = c(2, 3, 5, 3, 3))
+
+
+# 7. Write a function find_gcd(a, b) that uses a while loop to find the greatest
+# common divisor of two positive integers using the Euclidean algorithm. Do not
+# use a pre-written GCD function.
+
+gcd <- function(a, b) {
+  
+  while(b != 0) {
+    remainder <- a %% b
+    a <- b
+    b <- remainder
+  }
+  
+  return(a)
+}
+
+gcd(12, 4)
+
+
+# ### 3. Base functionals
+
+mat <- matrix(1:15, nrow = 3)
+mat
+
+apply(mat, 1, sum)   # 1 for row
+apply(mat, 2, sum)   # 2 for col
+
+rsum <- rep(NA, nrow(mat))
+for (i in 1:nrow(mat)) {
+  rsum[i] <- sum(mat[i, ])
+}
+rsum
+
+# lapply() returns a list after applying a function on each element of an R object
+
+# sapply() is similar to lapply() but it returns a atomic vector instead of a list
+
+lres <- list(x = 1:3, y = matrix(1:4, 2))
+lres
+
+lapply(lres, sum)
+sapply(lres, sum)
+

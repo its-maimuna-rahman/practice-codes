@@ -1,0 +1,147 @@
+# ### 1. Data frames
+
+name <- c("Raju", "Raj", "Raba", "Rahul", "Rimi")
+age <- c(11, 9, NA, 10, 5)
+gender <- c(NA, "boy", "girl", "boy", "girl")
+loc <- c(1, 2, 1, 1, NA)
+
+# Creating data frame
+df <- data.frame(name, age, sex=gender, loc)
+
+# Convert categorical variables to factor
+df$sex <- factor(df$sex)
+df$loc <- factor(df$loc, labels = c("Urban", "Rural"))
+
+df
+
+
+# ### 2. Some useful functions
+
+names(df)
+dim(df)
+summary(df)
+summary(df$age)
+table(df$sex)
+
+
+# ### 3. Ordering data frames
+
+# by age
+df
+
+df[order(df$age), ]
+
+
+# ### 4. Handling missing data
+na.omit(df)  # drops all rows containing NA
+mean(df$age, na.rm = T)
+
+# ### 5. Adding new column or rows
+
+df$place <- c("UK", "BN", "PK", "IN", "BN")
+df
+
+df$loc <- NULL
+df
+
+# rbind for rows
+df1 <- data.frame(id = 1:4, height = c(120, 150, 132, 122),
+                        weight = c(44, 56, 49, 45))
+df1
+
+df2 <- data.frame(id = 5:6, height = c(119, 110), weight = c(39, 35))
+df2
+
+rbind(df1, df2)
+
+df3 <- data.frame(location = c("UK", "CZ", "CZ", "UK"))
+df3
+
+cbind(df1, df3)
+
+
+# ### 6 Analyse a subset of data
+
+df_girl <- df[df$sex == "girl", ]
+df_girl
+
+sum(df_girl$age, na.rm = T)
+
+# ### Exercise 8.1
+
+# The data mtcars comprises fuel consumption and 10 aspects of automobile design
+# and performance for 32 automobiles. Load the data by running data(mtcars)
+
+# 1. Obtain the variable list of the data frame mtcars
+
+names(mtcars)
+
+
+# 2. How many observations and variables do the mtcars data have?
+
+dim(mtcars)  # 32 observations (rows), 11 variables (columns)
+
+
+# 3. Check the types of the variables of mtcars
+
+str(mtcars)
+
+
+# 4. Rename the variable hp to horsepower
+
+names(mtcars)[names(mtcars) == "hp"] <- "horsepower"
+names(mtcars)
+
+
+# 5. Order the dataset in ascending order of the variable mpg (miles per gallon)
+
+mtcars[order(mtcars$mpg), ]
+
+
+# 6. Convert the variable cyl (number of cylinders) to factor type variable
+
+mtcars$cyl <- factor(mtcars$cyl)
+str(mtcars$cyl)
+
+
+# 7. Create a subset of the mtcars dataset where mpg is less than 30, retaining only the first five variables. Save the resulting dataset as mtcars_subset.
+
+mtcars_subset <- mtcars[mtcars$mpg < 30, 1:5]
+mtcars_subset
+
+
+# 8. Find the mean, median, mode, range, standard deviation, and IQR of the variable Miles/(US) gallon (mpg)
+
+getmode <- function(x) {
+  uniq_x <- unique(x)
+  uniq_x[which.max(tabulate(match(x, uniq_x)))]
+}
+
+mean(mtcars$mpg)
+median(mtcars$mpg)
+getmode(mtcars$mpg)
+range(mtcars$mpg)
+sd(mtcars$mpg)
+IQR(mtcars$mpg)
+
+
+# 9. Find the frequency table of Number of cylinders (cyl)
+
+table(mtcars$cyl)
+
+
+# 10. Find the 2-way contingency table of Number of cylinders (cyl) and Number of forward gears (gear)
+
+table(mtcars$cyl, mtcars$gear)
+
+
+# ### 8 Frequency table
+table(mtcars$mpg)
+
+mtcars$mpg_cat <- cut(mtcars$mpg, breaks = c(10, 20, 30, 40),
+                      labels= c("low", "med", "high"), right = T)
+mtcars$mpg_cat
+
+table(mtcars$mpg_cat)
+table(mtcars$mpg_cat, mtcars$cyl)
+

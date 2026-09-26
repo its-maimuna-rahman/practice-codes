@@ -1,0 +1,70 @@
+# ####### Exercise 1.1 (Arithmatic calculation) #######
+# calculate 5 squared
+5**2
+# add 8 to 22 and then multiply the result by 3
+(8+22)*3
+# divide 8 by 2.5 and then divide the result by 3
+(8 / 2.5) / 3
+
+# ####### Creating object #######
+obj1 <- 67
+obj2 <- "R is cool"
+
+# to change the value of obj, reassign value
+obj1 <- "this is meowmeow"
+obj2 <- 16
+
+# operations using objects
+obj3 <- 6
+
+add_obj <- obj2 + obj3
+add_obj
+
+subtract_obj <- obj2 - obj3
+subtract_obj
+
+# ####### Exercise 1.2 #######
+# 1. Create an object x1 with value 73.
+# 2. Create x2 as the result of 101+36.
+# 3. Multiply x1 and x2 and store it in x3.
+# 4. Subtract 1 from x3 and calculate its 4th root.
+# 5. The answer should be 10
+
+x1 <- 73
+x2 <- 101+36
+x3 <- x1 * x2
+x3 <- (x3 - 1)**(1/4)
+x3
+
+# ####### Exercise 1.3 #######
+# 1. Create an object myObject with a value between 1 and 100.
+# 2. Add 13 to myObject and update the object.
+# 3. Check if myObject is divisible by 2, 3, 13, or 21.
+# 4. How many times can 5 fit into myObject?
+
+myObject <- 7
+myObject <- myObject + 13
+
+if(myObject %% 2 == 0) {
+  cat(myObject, " is divisible by 2\n")
+} else {
+  cat(myObject, " is not divisible by 2\n")
+}
+
+if(myObject %% 3 == 0) {
+  cat(myObject, " is divisible by 3\n")
+} else {
+  cat(myObject, " is not divisible by 3\n")
+}
+
+if(myObject %% 13 == 0) {
+  print(myObject, " is divisible by 13\n")
+} else {
+  cat(myObject, " is not divisible by 13\n")
+}
+
+if(myObject %% 21 == 0) {
+  cat(myObject, " is divisible by 21\n")
+} else {
+  cat(myObject, " is not divisible by 21\n")
+}
